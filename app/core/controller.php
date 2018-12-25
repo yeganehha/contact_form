@@ -17,7 +17,7 @@ if (!defined('contacts')) die('<link rel="stylesheet" href="http://maxcdn.bootst
 class controller {
 
 	private static $templates = [];
-	protected function view($template,$params = null ){
+	protected static function view($template,$params = null ){
 		if ( isset(self::$templates[$template]) ){
 			self::$templates = array_merge(self::$templates,$params);
 		} else
