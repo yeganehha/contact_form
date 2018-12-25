@@ -23,6 +23,7 @@ class home extends \controller {
 	}
 
 	public function index($params = null){
-		parent::view('home',$params);
+		//parent::view('home',$params);
+		parent::view('home',array('username' => 'erfan'));
 	}
 }

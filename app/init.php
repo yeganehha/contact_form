@@ -18,6 +18,8 @@ define('INC_DIR' , __DIR__.'/');
 define('HTTP_ROOT' , 'http://localhost/contacts/');
 
 spl_autoload_register(function ($class_name) {
+	if ( substr($class_name, 0 , 6 ) == 'Smarty' )
+		return ;
 	$class_name = str_replace(['App','\\'],[INC_DIR,'/'] , $class_name). 'Controller.php';
 	if ( file_exists($class_name)) {
 		require_once $class_name;
