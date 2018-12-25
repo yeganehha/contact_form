@@ -15,3 +15,4 @@ define( 'contacts' , 'Erfan Ebrahimi');
 
 require_once __DIR__.'/app/init.php';
 $app = new app();
+show (controller::generateView());
