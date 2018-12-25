@@ -33,7 +33,7 @@ class App {
 
 		require_once INC_DIR.'controller/'.$this->controller.'Controller.php' ;
 
-		call_user_func_array([$this->controller, $this->method], $this->params);
+		call_user_func_array(['App\controller\\'.$this->controller, $this->method], $this->params);
 	}
 
 
