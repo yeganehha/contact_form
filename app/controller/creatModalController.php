@@ -9,7 +9,7 @@ namespace App\Controller;
  * Date: 4/7/2017
  * Time: 10:00 PM
  */
-class creatTable extends \controller {
+class creatModal extends \controller {
 	public $text ;
 	private $tableName ;
 	private $extendClass ;
@@ -42,7 +42,7 @@ class creatTable extends \controller {
 	public function setNameTable( $tableName = null , $keyTable = 'id', $extendsClass = null ){
 		$this->tableName  = $tableName;
 		$this->keyTable  = $keyTable;
-		$this->extendClass  = $extendsClass;
+		$this->extendClass  = str_replace('-' ,'\\' , $extendsClass);
 		return true ;
 	}
 
@@ -60,7 +60,7 @@ class creatTable extends \controller {
 	}
 	public function createClass(){
 		//$this->text .= $this->newLine().'if ( ! class_exists(\''.$this->tableName.'\')) {'.$this->newLine( );
-		$this->text .= $this->newLine().'class '.$this->tableName.( $this->extendClass != null ? 'extends '.$this->extendClass : '').' {'.$this->newLine().$this->newLine();
+		$this->text .= $this->newLine().'class '.$this->tableName.( $this->extendClass != null ? ' extends '.$this->extendClass : '').' {'.$this->newLine().$this->newLine();
 		return true;
 	}
 
@@ -123,8 +123,8 @@ class creatTable extends \controller {
 
 
     public function creatSearch (  ){
-		$this->text .= $this->newLine() . '	public function search( $searcKey , $searchText , $tableName = \''.$this->tableName.'\'  , $filds = \'*\' ) {' . $this->newLine();
-		$this->text .= '		$results = \database::->searche($tableName, $searcKey, $searchText, true ,false,$filds );' . $this->newLine();
+		$this->text .= $this->newLine() . '	public function search( $searchVariable, $searchWhereClaus , $tableName = \''.$this->tableName.'\'  , $filds = \'*\' ) {' . $this->newLine();
+		$this->text .= '		$results = \database::searche($tableName, $searchWhereClaus, $searchVariable, true ,false,$filds );' . $this->newLine();
 		
 		//$this->text .= '		$results[\'numbers\'] = count($results);' . $this->newLine() ;
 		
@@ -165,11 +165,12 @@ class creatTable extends \controller {
 
 	public function creatCunstructor(){
 		$columns = $this->columns();
-		$this->text .= $this->newLine().$this->newLine().'	public function __construct( $db , $searchText = null , $searcKey = \''.$this->keyTable.'\' ){'. $this->newLine();
-		$this->text .= '		/* @var db $db */' . $this->newLine();
-		$this->text .= '		$this->db = $db ;' . $this->newLine();
-		$this->text .= '		if ( $searchText != null ) {' . $this->newLine();
-		$this->text .= '			$result = $this->db->searche(\''.$this->tableName.'\' ,  $searcKey .\'= ? \'  , array($searchText) ); ' . $this->newLine();
+		//$this->text .= $this->newLine().$this->newLine().'	public function __construct( $db , $searchVariable = null , $searchWhereClaus = \''.$this->keyTable.' = ? \' ){'. $this->newLine();
+		$this->text .= $this->newLine().$this->newLine().'	public function __construct(  $searchVariable = null , $searchWhereClaus = \''.$this->keyTable.' = ? \' ){'. $this->newLine();
+		//$this->text .= '		/* @var db $db */' . $this->newLine();
+		//$this->text .= '		$this->db = $db ;' . $this->newLine();
+		$this->text .= '		if ( $searchVariable != null ) {' . $this->newLine();
+		$this->text .= '			$result = \database::searche(\''.$this->tableName.'\' ,  $searchWhereClaus  , array($searchVariable) ); ' . $this->newLine();
 		$this->text .= '			if ( $result != null ) {' . $this->newLine();
 		foreach ( $columns as $key => $column) {
 			$this->text .= '				$this->'.$column['Field'].' = $result[\''.$column['Field'].'\'] ;' . $this->newLine();
@@ -201,7 +202,7 @@ class creatTable extends \controller {
 	}
 
 	public function endLineOfClass (){
-		$this->text .= $this->newLine().$this->newLine().'}'.$this->newLine().'}'.$this->newLine();
+		$this->text .= $this->newLine()/*.$this->newLine().'}'*/.$this->newLine().'}'.$this->newLine();
 		return true;
 	}
 	public function creatFile(){
@@ -231,10 +232,10 @@ class creatTable extends \controller {
 
 	public function creat($param){
 		$this->setNameTable($param[0],$param[1],$param[2]);
-		if ( isset($param[3]))
-			$this->nameSpaceAdd(str_replace('-', '\\' ,$param[3]));
 		$this->firstLineOfFiel();
 		$this->copyRight();
+		if ( isset($param[3]))
+			$this->nameSpaceAdd(str_replace('-', '\\' ,$param[3]));
 		$this->createClass();
 		$this->creatVariable();
 		$this->creatCunstructor();
