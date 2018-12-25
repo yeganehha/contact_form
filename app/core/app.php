@@ -33,7 +33,7 @@ class App {
 
 		require_once INC_DIR.'controller/'.$this->controller.'Controller.php' ;
 
-		call_user_func_array(['App\controller\\'.$this->controller, $this->method], $this->params);
+		call_user_func_array(['App\controller\\'.$this->controller, $this->method], array($this->params)) ;
 	}
 
 
@@ -48,7 +48,7 @@ class App {
 			$controller = trim(strtolower($controller));
 			if (file_exists(INC_DIR . 'controller/' . $controller . 'Controller.php')) {
 				require_once INC_DIR . 'controller/' . $controller . 'Controller.php';
-				if (class_exists($controller)) {
+				if (class_exists('App\controller\\'.$controller)) {
 					$this->controller = $controller;
 					return true ;
 				} else {
@@ -74,9 +74,17 @@ class App {
 	 */
 	private function checkMethodIsExist($method){
 		require_once INC_DIR . 'controller/' . $this->controller . 'Controller.php';
-		if (class_exists($method)) {
-			$this->method = $method;
-			return true ;
+		if (class_exists('App\controller\\'.$this->controller)) {
+			$className = 'App\controller\\'.$this->controller ;
+			$class = new $className();
+			if ( method_exists($class,$method)) {
+				$this->method = $method;
+				return true;
+			}else {
+				$this->controller = 'httpErrorHandler';
+				$this->method = 'E404';
+				return false ;
+			}
 		} else {
 			$this->controller = 'httpErrorHandler';
 			$this->method = 'E404';
@@ -94,7 +102,7 @@ class App {
 		if ( count($url) > 2 ) {
 			unset($url[0]);
 			unset($url[1]);
-			$this->params = $url ;
+			$this->params = array_merge($this->params , $url) ;
 		}
 		return $url ;
 	}
