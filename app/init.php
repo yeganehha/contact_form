@@ -24,6 +24,7 @@ spl_autoload_register(function ($class_name) {
 	} else {
 		require_once INC_DIR.'controller/httpErrorHandlerController.php' ;
 		App\controller\httpErrorHandler::E500();
+		exit;
 	}
 });
 
@@ -37,3 +38,6 @@ function show($pram = null , $exit = true ){
 
 require_once INC_DIR.'core/app.php';
 require_once INC_DIR.'core/controller.php';
+$configDataBase = require_once INC_DIR.'config.php';
+require_once INC_DIR.'core/databaseConection.php';
+database::conection($configDataBase);
