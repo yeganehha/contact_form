@@ -26,3 +26,4 @@ function show($pram = null , $exit = true ){
 }
 
 require_once INC_DIR.'core/app.php';
+require_once INC_DIR.'core/controller.php';
