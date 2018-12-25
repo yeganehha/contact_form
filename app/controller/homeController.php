@@ -22,7 +22,7 @@ class home extends \controller {
 
 	}
 
-	public function index(){
-		parent::view('home',array('param1'=>1));
+	public function index($params = null){
+		parent::view('home',$params);
 	}
 }
