@@ -26,7 +26,21 @@ class controller {
 	}
 
 	public static function generateView(){
-		return self::$templates ;
+		require_once INC_DIR.'plugins/smarty/Smarty.class.php';
+		$smarty = new Smarty();
+		$smarty->force_compile = true;
+		$smarty->debugging = false ;
+		$smarty->caching = false;
+		$smarty->cache_lifetime = 120;
+		$smarty->setTemplateDir(INC_DIR.'../templates/' );
+		$smarty->assign("templateDir",  HTTP_ROOT.'templates/' );
+		$smarty->assign("siteUrl",  HTTP_ROOT );
+		foreach (self::$templates as $templateName => $assignVariable ){
+			foreach ($assignVariable as $name => $value ){
+				$smarty->assign($name,  $value );
+			}
+			$smarty->display($templateName.'.tpl');
+		}
 	}
 
 	protected function model($model) {
@@ -35,16 +49,13 @@ class controller {
 			if (class_exists($model)) {
 				return new $model() ;
 			} else {
-				require_once INC_DIR.'controller/httpErrorHandlerController.php' ;
 				App\controller\httpErrorHandler::E500();
 				exit;
 			}
 		} else {
-			require_once INC_DIR.'controller/httpErrorHandlerController.php' ;
 			App\controller\httpErrorHandler::E500();
 			exit;
 		}
-		require_once INC_DIR.'controller/httpErrorHandlerController.php' ;
 		App\controller\httpErrorHandler::E500();
 		exit;
 	}
