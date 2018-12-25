@@ -33,7 +33,14 @@ class App {
 
 		require_once INC_DIR.'controller/'.$this->controller.'Controller.php' ;
 
-		call_user_func_array(['App\controller\\'.$this->controller, $this->method], array($this->params)) ;
+		//call_user_func_array(array('App\controller\\'.$this->controller, $this->method), array($this->params)) ;
+		$className = 'App\controller\\'.$this->controller ;
+		$methodName = $this->method ;
+		$class = new $className();
+		if ( count($this->params) == 0 )
+			$class->$methodName();
+		else
+			$class->$methodName($this->params);
 	}
 
 
