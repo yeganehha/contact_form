@@ -92,7 +92,7 @@ class database {
 	/**
 	 * @param        $TabelName
 	 * @param string $query
-	 * @param null   $parms
+	 * @param null   $param
 	 * @param bool   $justReturnArray
 	 * @param bool   $idInIndexOfRow
 	 * @param string $getFilds
@@ -101,7 +101,7 @@ class database {
 	 *
 	 * @return bool|void
 	 */
-	public static function searche($TabelName, $query = ' 1 = 1 ', $parms = null, $justReturnArray = false, $idInIndexOfRow = false, $getFilds = "*", $showQuery = false, $fullQuery = false) { // searche ind DB ( name of tabel , value of 'where' in query , return array or not , just return id of rows , show query for debuging , if $query isn't for value of 'where'  )
+	public static function searche($TabelName, $query = ' 1 = 1 ', $param = null, $justReturnArray = false, $idInIndexOfRow = false, $getFilds = "*", $showQuery = false, $fullQuery = false) { // searche ind DB ( name of tabel , value of 'where' in query , return array or not , just return id of rows , show query for debuging , if $query isn't for value of 'where'  )
 
 		if ($fullQuery) $setQuery = $query; else {
 			$setQuery = "SELECT " . $getFilds . " FROM  " . self::$TabelDbName . $TabelName . " WHERE " . $query; // creat query
@@ -113,7 +113,7 @@ class database {
 		}
 		try {
 			$prepared = self::$DataBase->prepare($setQuery);
-			$prepared->execute($parms);
+			$prepared->execute($param);
 			if ($idInIndexOfRow) $result = $prepared->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_UNIQUE | PDO::FETCH_ASSOC); else
 				$result = $prepared->fetchAll(PDO::FETCH_ASSOC);
 
@@ -122,7 +122,7 @@ class database {
 			if (count($result) == 1) return $result[0];
 			return $result;
 		} catch (PDOException $e) {
-			return (new database)->error($e->getMessage(), $query , $parms);
+			return (new database)->error($e->getMessage(), $query , $param);
 		}
 	}
 
@@ -130,14 +130,14 @@ class database {
 	/**
 	 * @param        $TabelName
 	 * @param string $query
-	 * @param null   $parms
+	 * @param null   $param
 	 * @param string $getFilds
 	 * @param bool   $showQuery
 	 * @param bool   $fullQuery
 	 *
 	 * @return bool|void
 	 */
-	public static function counting($TabelName, $query = ' 1 = 1 ', $parms = null, $getFilds = "*", $showQuery = false, $fullQuery = false) { // searche ind DB ( name of tabel , value of 'where' in query , return array or not , just return id of rows , show query for debuging , if $query isn't for value of 'where'  )
+	public static function counting($TabelName, $query = ' 1 = 1 ', $param = null, $getFilds = "*", $showQuery = false, $fullQuery = false) { // searche ind DB ( name of tabel , value of 'where' in query , return array or not , just return id of rows , show query for debuging , if $query isn't for value of 'where'  )
 		if ($fullQuery) $setQuery = $query; else {
 			$setQuery = "SELECT count(" . $getFilds . ") as cccC FROM  " . self::$TabelDbName . $TabelName . " WHERE " . $query; // creat query
 		}
@@ -149,11 +149,11 @@ class database {
 		}
 		try {
 			$prepared = self::$DataBase->prepare($setQuery);
-			$prepared->execute($parms);
+			$prepared->execute($param);
 			$result = $prepared->fetchAll(PDO::FETCH_ASSOC);
 			return $result[0]['cccC'];
 		} catch (PDOException $e) {
-			return (new database)->error($e->getMessage(), $query , $parms);
+			return (new database)->error($e->getMessage(), $query , $param);
 		}
 	}
 
@@ -194,7 +194,7 @@ class database {
 			else
 				$stmt->bindValue(':' . $key, NULL , PDO::PARAM_NULL);
 
-		if (isset($query_search['parms']) && is_array($query_search['parms']) && count($query_search_exploded) > 0) foreach ($query_search['parms'] as $key => $value) $stmt->bindValue(':EXPLODED' . $key, $value);
+		if (isset($query_search['param']) && is_array($query_search['param']) && count($query_search_exploded) > 0) foreach ($query_search['param'] as $key => $value) $stmt->bindValue(':EXPLODED' . $key, $value);
 
 		try {
 			self::$DataBase->beginTransaction();
@@ -232,7 +232,7 @@ class database {
 			return;
 		}
 		$stmt = self::$DataBase->prepare($query);
-		if (isset($query_search['parms']) && is_array($query_search['parms']) && count($query_search_exploded) > 0) foreach ($query_search['parms'] as $key => $value) $stmt->bindValue(':EXPLODED' . $key, $value);
+		if (isset($query_search['param']) && is_array($query_search['param']) && count($query_search_exploded) > 0) foreach ($query_search['param'] as $key => $value) $stmt->bindValue(':EXPLODED' . $key, $value);
 
 		try {
 			self::$DataBase->beginTransaction();
@@ -242,10 +242,10 @@ class database {
 			} else {
 				self::$DataBase->commit();
 				$erroInfo = self::$DataBase->errorInfo();
-				return (new database)->error($erroInfo[2], $query , $query_search['parms']);
+				return (new database)->error($erroInfo[2], $query , $query_search['param']);
 			}
 		} catch (PDOException $e) {
-			return (new database)->error($e->getMessage(), $query , $query_search['parms']);
+			return (new database)->error($e->getMessage(), $query , $query_search['param']);
 		}
 	}
 

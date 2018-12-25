@@ -17,10 +17,11 @@
 // *************************************************************************
 
 
-namespace App\Controller;
+//namespace App\Model;
 
+use App\Model\model ;
 
-class contact extends \controller {
+class contact implements  App\Model\model {
 
 
 	private $id ;
@@ -52,8 +53,8 @@ class contact extends \controller {
 		return $this->returning();
 	}
 
-	public function search( $searchVariable, $searchWhereClaus , $tableName = 'contact'  , $filds = '*' ) {
-		$results = \database::searche($tableName, $searchWhereClaus, $searchVariable, true ,false,$filds );
+	public function search( $searchVariable, $searchWhereClaus , $tableName = 'contact'  , $fields = '*' ) {
+		$results = \database::searche($tableName, $searchWhereClaus, $searchVariable, true ,false,$fields );
 		return $this->returning($results) ;
 	}
 
@@ -176,20 +177,20 @@ class contact extends \controller {
 		$array['homePhone'] = $this->homePhone ;
 		$array['cellPhone'] = $this->cellPhone ;
 		$array['email'] = $this->email ;
-		if ( \database::update('contact' , $array , array('query' => 'id = ?', 'parms' => array($this->id)) ) ) 
+		if ( \database::update('contact' , $array , array('query' => 'id = ?', 'param' => array($this->id)) ) ) 
 			return $this->returning() ;
 		return $this->returning(null,false,'contact2') ;
 	}
 
 
 	public function deleteFromDataBase( ) {
-		if ( \database::delete('contact', array('query' => 'id = ?', 'parms' => array($this->id)) ) ) 
+		if ( \database::delete('contact', array('query' => 'id = ?', 'param' => array($this->id)) ) ) 
 			return $this->returning() ;
 		return  $this->returning(null,false,'contact1') ;
 	}
 
 
-	public function retutnAsArray( ) {
+	public function returnAsArray( ) {
 		$array['id'] = $this->id ;
 		$array['lastName'] = $this->lastName ;
 		$array['firstName'] = $this->firstName ;
@@ -204,7 +205,7 @@ class contact extends \controller {
 
 
 
-	private function returning($return = null , $status = true , $errornumber = "contact0" , $masssageParms = null ){
+	private function returning($return = null , $status = true , $errorNumber = "contact0" , $massagesParams = null ){
 		if ( $return == null )
 				return $status ;
 		else

@@ -12,7 +12,7 @@ namespace App\Controller;
 class creatModal extends \controller {
 	public $text ;
 	private $tableName ;
-	private $extendClass ;
+	private $implementsClass ;
 	private $minFile;
 	private $columns ;
 	private $keyTable;
@@ -39,10 +39,10 @@ class creatModal extends \controller {
 		$this->text .= $text ;
 	}
 
-	public function setNameTable( $tableName = null , $keyTable = 'id', $extendsClass = null ){
+	public function setNameTable( $tableName = null , $keyTable = 'id', $implementssClass = null ){
 		$this->tableName  = $tableName;
 		$this->keyTable  = $keyTable;
-		$this->extendClass  = str_replace('-' ,'\\' , $extendsClass);
+		$this->implementsClass  = str_replace('-' ,'\\' , $implementssClass);
 		return true ;
 	}
 
@@ -60,7 +60,9 @@ class creatModal extends \controller {
 	}
 	public function createClass(){
 		//$this->text .= $this->newLine().'if ( ! class_exists(\''.$this->tableName.'\')) {'.$this->newLine( );
-		$this->text .= $this->newLine().'class '.$this->tableName.( $this->extendClass != null ? ' extends '.$this->extendClass : '').' {'.$this->newLine().$this->newLine();
+		if ( $this->implementsClass != null  )
+			$this->text .= $this->newLine().'use '.$this->implementsClass.' ;'.$this->newLine( );
+		$this->text .= $this->newLine().'class '.$this->tableName.( $this->implementsClass != null ? ' implements '.$this->implementsClass : '').' {'.$this->newLine().$this->newLine();
 		return true;
 	}
 
@@ -101,7 +103,7 @@ class creatModal extends \controller {
 			if ( $column['Field'] != $this->keyTable )
 				$this->text .= '		$array[\''.$column['Field'].'\'] = $this->'.$column['Field']. ' ;' . $this->newLine();
 		}
-		$this->text .= '		if ( \database::update(\''.$this->tableName.'\' , $array , array(\'query\' => \''.$this->keyTable.' = ?\', \'parms\' => array($this->'.$this->keyTable.')) ) ) ' . $this->newLine();
+		$this->text .= '		if ( \database::update(\''.$this->tableName.'\' , $array , array(\'query\' => \''.$this->keyTable.' = ?\', \'param\' => array($this->'.$this->keyTable.')) ) ) ' . $this->newLine();
 		$this->text .= '			return $this->returning() ;' . $this->newLine() ;
 		$this->text .= '		return $this->returning(null,false,\''.$this->tableName.'2\') ;' . $this->newLine() ;
 		$this->text .= '	}' . $this->newLine(). $this->newLine();
@@ -111,7 +113,7 @@ class creatModal extends \controller {
 
 	public function creatReturnAsArray (  ){
 		$columns = $this->columns();
-		$this->text .= $this->newLine() . '	public function retutnAsArray( ) {' . $this->newLine();
+		$this->text .= $this->newLine() . '	public function returnAsArray( ) {' . $this->newLine();
 		foreach ( $columns as $key => $column) {
 			$this->text .= '		$array[\''.$column['Field'].'\'] = $this->'.$column['Field']. ' ;' . $this->newLine();
 		}
@@ -123,8 +125,8 @@ class creatModal extends \controller {
 
 
     public function creatSearch (  ){
-		$this->text .= $this->newLine() . '	public function search( $searchVariable, $searchWhereClaus , $tableName = \''.$this->tableName.'\'  , $filds = \'*\' ) {' . $this->newLine();
-		$this->text .= '		$results = \database::searche($tableName, $searchWhereClaus, $searchVariable, true ,false,$filds );' . $this->newLine();
+		$this->text .= $this->newLine() . '	public function search( $searchVariable, $searchWhereClaus , $tableName = \''.$this->tableName.'\'  , $fields = \'*\' ) {' . $this->newLine();
+		$this->text .= '		$results = \database::searche($tableName, $searchWhereClaus, $searchVariable, true ,false,$fields );' . $this->newLine();
 		
 		//$this->text .= '		$results[\'numbers\'] = count($results);' . $this->newLine() ;
 		
@@ -155,7 +157,7 @@ class creatModal extends \controller {
 
 	public function creatDelete ( ){
 		$this->text .= $this->newLine() . '	public function deleteFromDataBase( ) {' . $this->newLine();
-		$this->text .= '		if ( \database::delete(\''.$this->tableName.'\', array(\'query\' => \''.$this->keyTable.' = ?\', \'parms\' => array($this->'.$this->keyTable.')) ) ) ' . $this->newLine();
+		$this->text .= '		if ( \database::delete(\''.$this->tableName.'\', array(\'query\' => \''.$this->keyTable.' = ?\', \'param\' => array($this->'.$this->keyTable.')) ) ) ' . $this->newLine();
 		$this->text .= '			return $this->returning() ;' . $this->newLine() ;
 		$this->text .= '		return  $this->returning(null,false,\''.$this->tableName.'1\') ;' . $this->newLine() ;
 		$this->text .= '	}' . $this->newLine(). $this->newLine();
@@ -189,13 +191,13 @@ class creatModal extends \controller {
 	}
 
 	public function endMethodOfClassReturnArray (){
-		$this->text .= $this->newLine().$this->newLine().'	private function returning($return = null , $status = true , $errornumber = "'.$this->tableName.'0" , $masssageParms = null ){'.$this->newLine();
-		$this->text .= '		$array[\'status\']= $status ;'.$this->newLine().'		$array[\'masssageParms\'] = $masssageParms;'.$this->newLine();
-		$this->text .= '		$array[\'result\'] = $return ;'.$this->newLine().'		$array[\'error\'] = $errornumber ;'.$this->newLine().'		return $array;'.$this->newLine().'	}'.$this->newLine().$this->newLine();
+		$this->text .= $this->newLine().$this->newLine().'	private function returning($return = null , $status = true , $errorNumber = "'.$this->tableName.'0" , $massagesParams = null ){'.$this->newLine();
+		$this->text .= '		$array[\'status\']= $status ;'.$this->newLine().'		$array[\'massagesParams\'] = $massagesParams;'.$this->newLine();
+		$this->text .= '		$array[\'result\'] = $return ;'.$this->newLine().'		$array[\'error\'] = $errorNumber ;'.$this->newLine().'		return $array;'.$this->newLine().'	}'.$this->newLine().$this->newLine();
 		return true;
 	}
 	public function endMethodOfClass (){
-		$this->text .= $this->newLine().$this->newLine().'	private function returning($return = null , $status = true , $errornumber = "'.$this->tableName.'0" , $masssageParms = null ){'.$this->newLine();
+		$this->text .= $this->newLine().$this->newLine().'	private function returning($return = null , $status = true , $errorNumber = "'.$this->tableName.'0" , $massagesParams = null ){'.$this->newLine();
 		$this->text .= '		if ( $return == null )'.$this->newLine().'				return $status ;'.$this->newLine();
 		$this->text .= '		else'.$this->newLine().'				return $return ;'.$this->newLine().$this->newLine().'	}'.$this->newLine().$this->newLine();
 		return true;
