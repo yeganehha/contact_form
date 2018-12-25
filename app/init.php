@@ -17,6 +17,16 @@ if (!defined('contacts')) die('<link rel="stylesheet" href="http://maxcdn.bootst
 define('INC_DIR' , __DIR__.'/');
 define('HTTP_ROOT' , 'http://localhost/contacts/');
 
+spl_autoload_register(function ($class_name) {
+	$class_name = str_replace(['App','\\'],[INC_DIR,'/'] , $class_name). 'Controller.php';
+	if ( file_exists($class_name)) {
+		require_once $class_name;
+	} else {
+		require_once INC_DIR.'controller/httpErrorHandlerController.php' ;
+		App\controller\httpErrorHandler::E500();
+	}
+});
+
 function show($pram = null , $exit = true ){
 	echo '<pre>';
 	var_dump($pram);

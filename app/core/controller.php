@@ -35,16 +35,13 @@ class controller {
 			if (class_exists($model)) {
 				return new $model() ;
 			} else {
-				require_once INC_DIR.'controller/httpErrorHandlerController.php' ;
 				App\controller\httpErrorHandler::E500();
 				exit;
 			}
 		} else {
-			require_once INC_DIR.'controller/httpErrorHandlerController.php' ;
 			App\controller\httpErrorHandler::E500();
 			exit;
 		}
-		require_once INC_DIR.'controller/httpErrorHandlerController.php' ;
 		App\controller\httpErrorHandler::E500();
 		exit;
 	}
