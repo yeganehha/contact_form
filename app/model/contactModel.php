@@ -17,11 +17,12 @@
 // *************************************************************************
 
 
-//namespace App\Model;
+namespace App\Controller;
 
-use App\Model\model ;
 
-class contact implements  App\Model\model {
+use \controller ;
+
+class contact implements \controller {
 
 
 	private $id ;
