@@ -43,4 +43,5 @@ require_once INC_DIR.'core/controller.php';
 $configDataBase = require_once INC_DIR.'config.php';
 require_once INC_DIR.'core/databaseConection.php';
 require_once INC_DIR.'core/request.php';
+require_once INC_DIR.'core/validate.php';
 database::conection($configDataBase);

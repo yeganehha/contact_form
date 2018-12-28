@@ -42,11 +42,14 @@ class request {
 			$return = array();
 			foreach ( $parameters as $key => $defaultValue ){
 				if ( is_int($key)) {
-					if (isset($data[$defaultValue]))
-						if ( $urlDecode )
+					if (isset($data[$defaultValue])) {
+						if ($urlDecode)
 							$return[$defaultValue] = urldecode($data[$defaultValue]);
 						else
 							$return[$defaultValue] = $data[$defaultValue];
+					} else {
+						$return[$defaultValue] = null ;
+					}
 				} else {
 					if (isset($data[$key]))
 						if ( $urlDecode )
