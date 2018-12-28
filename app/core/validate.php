@@ -208,7 +208,7 @@ class validate {
 	 * @return bool
 	 */
 	private function __email($paramsName , $paramsValue , $paramsValidateType ){
-		if ( filter_var($paramsValue, FILTER_VALIDATE_EMAIL) and $paramsValue != '' ) {
+		if ( ! filter_var($paramsValue, FILTER_VALIDATE_EMAIL) and $paramsValue != '' ) {
 			$this->error[] = array('name' => $paramsName , 'type' => 'email' , 'params' => '' );
 			return false ;
 		}
