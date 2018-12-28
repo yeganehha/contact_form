@@ -17,10 +17,19 @@ if (!defined('contacts')) die('<link rel="stylesheet" href="http://maxcdn.bootst
 define('INC_DIR' , __DIR__.'/');
 define('HTTP_ROOT' , 'http://localhost/contacts/');
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 spl_autoload_register(function ($class_name) {
 	if ( substr($class_name, 0 , 6 ) == 'Smarty' )
 		return ;
-	$class_name = str_replace(['App','\\'],[INC_DIR,'/'] , $class_name). 'Controller.php';
+	if ( strtolower($class_name) == 'app\model\model')
+		$class_name = INC_DIR . 'model/model.php';
+	elseif ( substr(strtolower($class_name),0,9) == 'app\model')
+		$class_name = str_replace(['App\model','App\Model','\\'],[INC_DIR.'model',INC_DIR.'model','/'] , $class_name). 'Model.php';
+	elseif ( substr(strtolower($class_name),0,14) == 'app\controller')
+		$class_name = str_replace(['App\controller'.'App\Controller','\\'],[INC_DIR.'controller',INC_DIR.'controller','/'] , $class_name). 'Controller.php';
 	if ( file_exists($class_name)) {
 		require_once $class_name;
 	} else {
