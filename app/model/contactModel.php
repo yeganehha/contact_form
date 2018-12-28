@@ -17,10 +17,9 @@
 // *************************************************************************
 
 
-namespace App\Controller;
+namespace App\model;
 
-
-use  App\Model\model;
+use  App\model\model;
 
 class contact implements  model {
 

@@ -45,6 +45,7 @@
                             <img src="https://www.gravatar.com/avatar/d06e664c1ea597ce6388ed773fa26d34/?s=100&d=mp" alt="avatar" >
                         </div>
                         <form action="{$siteUrl}home/edit" method="post">
+                            <input type="hidden" name="id" value="0">
                             first name :
                             <input type="text" value="" autocomplete="off" name="firstName" class="form-control contactFirstName">
                             last name :

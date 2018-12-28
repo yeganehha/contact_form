@@ -43,11 +43,11 @@ class controller {
 		}
 	}
 
-	protected function model($model) {
+	protected function model($model , $searchVariable = null , $searchWhereClaus = 'id = ? ') {
 		if (file_exists(INC_DIR . 'model/' . $model . 'Model.php')) {
-			require_once INC_DIR . 'model/' . $model . 'Model.php';
+			$model = 'App\model\\'.$model ;
 			if (class_exists($model)) {
-				return new $model() ;
+				return new $model($searchVariable,$searchWhereClaus) ;
 			} else {
 				App\controller\httpErrorHandler::E500();
 				exit;

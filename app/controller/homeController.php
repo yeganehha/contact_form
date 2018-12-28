@@ -26,4 +26,29 @@ class home extends \controller {
 		//parent::view('home',$params);
 		parent::view('home',array('username' => 'erfan'));
 	}
+
+	public function edit(){
+		$dataGet = \request::post(array('id' => '0', 'firstName' , 'lastName' , 'phone' , 'email'));
+		$validate = new \validate($dataGet,array(
+			'id' => 'required|notEmpty|number',
+			'firstName' => 'required|notEmpty',
+			'lastName' => 'required|notEmpty',
+			'phone' => 'required|notEmpty|numberFormat:{+98/0/}{91/90/92/93/4X/8X/3X/7X/2X/5X/6X/1X}XXXXXXXX',
+			'email' => 'email'
+		));
+		if ( $validate->isValid() ){
+			$validData = $validate->getReturnData() ;
+			$model = parent::model('contact');
+			$model->setEmail($validData['email']);
+			$model->setLastName($validData['lastName']);
+			$model->setPhone($validData['phone']);
+			$model->setFirstName($validData['firstName']);
+			$idOfInsertToDB = $model->insertToDataBase();
+			if ( $idOfInsertToDB > 0 ) {
+				header('Location: '.HTTP_ROOT.'home/index/insertDone/'.$idOfInsertToDB);
+			}
+		} else {
+			show($validate->getError());
+		}
+	}
 }
