@@ -20,19 +20,15 @@
 namespace App\Controller;
 
 
-use \controller ;
+use  App\Model\model;
 
-class contact implements \controller {
+class contact implements  model {
 
 
 	private $id ;
 	private $lastName ;
 	private $firstName ;
-	private $company ;
 	private $phone ;
-	private $coWorkPhone ;
-	private $homePhone ;
-	private $cellPhone ;
 	private $email ;
 
 	public function __construct(  $searchVariable = null , $searchWhereClaus = 'id = ? ' ){
@@ -42,11 +38,7 @@ class contact implements \controller {
 				$this->id = $result['id'] ;
 				$this->lastName = $result['lastName'] ;
 				$this->firstName = $result['firstName'] ;
-				$this->company = $result['company'] ;
 				$this->phone = $result['phone'] ;
-				$this->coWorkPhone = $result['coWorkPhone'] ;
-				$this->homePhone = $result['homePhone'] ;
-				$this->cellPhone = $result['cellPhone'] ;
 				$this->email = $result['email'] ;
 			} else 
 				return $this->returning(null,false,'contact4');
@@ -75,28 +67,8 @@ class contact implements \controller {
 	}
 
 
-	public function setCompany( $company = null ) {
-		$this->company = $company ;
-	}
-
-
 	public function setPhone( $phone = null ) {
 		$this->phone = $phone ;
-	}
-
-
-	public function setCoWorkPhone( $coWorkPhone = null ) {
-		$this->coWorkPhone = $coWorkPhone ;
-	}
-
-
-	public function setHomePhone( $homePhone = null ) {
-		$this->homePhone = $homePhone ;
-	}
-
-
-	public function setCellPhone( $cellPhone = null ) {
-		$this->cellPhone = $cellPhone ;
 	}
 
 
@@ -120,28 +92,8 @@ class contact implements \controller {
 	}
 
 
-	public function getCompany() {
-		return $this->company ;
-	}
-
-
 	public function getPhone() {
 		return $this->phone ;
-	}
-
-
-	public function getCoWorkPhone() {
-		return $this->coWorkPhone ;
-	}
-
-
-	public function getHomePhone() {
-		return $this->homePhone ;
-	}
-
-
-	public function getCellPhone() {
-		return $this->cellPhone ;
 	}
 
 
@@ -153,11 +105,7 @@ class contact implements \controller {
 	public function insertToDataBase( ) {
 		$array['lastName'] = $this->lastName ;
 		$array['firstName'] = $this->firstName ;
-		$array['company'] = $this->company ;
 		$array['phone'] = $this->phone ;
-		$array['coWorkPhone'] = $this->coWorkPhone ;
-		$array['homePhone'] = $this->homePhone ;
-		$array['cellPhone'] = $this->cellPhone ;
 		$array['email'] = $this->email ;
 		$id = \database::insert('contact' , $array  ); 
 		$this->id = $id ; 
@@ -172,11 +120,7 @@ class contact implements \controller {
 	public function upDateDataBase( ) {
 		$array['lastName'] = $this->lastName ;
 		$array['firstName'] = $this->firstName ;
-		$array['company'] = $this->company ;
 		$array['phone'] = $this->phone ;
-		$array['coWorkPhone'] = $this->coWorkPhone ;
-		$array['homePhone'] = $this->homePhone ;
-		$array['cellPhone'] = $this->cellPhone ;
 		$array['email'] = $this->email ;
 		if ( \database::update('contact' , $array , array('query' => 'id = ?', 'param' => array($this->id)) ) ) 
 			return $this->returning() ;
@@ -195,11 +139,7 @@ class contact implements \controller {
 		$array['id'] = $this->id ;
 		$array['lastName'] = $this->lastName ;
 		$array['firstName'] = $this->firstName ;
-		$array['company'] = $this->company ;
 		$array['phone'] = $this->phone ;
-		$array['coWorkPhone'] = $this->coWorkPhone ;
-		$array['homePhone'] = $this->homePhone ;
-		$array['cellPhone'] = $this->cellPhone ;
 		$array['email'] = $this->email ;
 		return $array ;
 	}
