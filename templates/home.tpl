@@ -11,6 +11,7 @@
     <title>دفترچه تلفن</title>
 
     <link href="{$templateDir}/css/toolkit-inverse.css" rel="stylesheet">
+    <link rel="stylesheet" href="{$templateDir}/css/font-awesome.min.css">
 
 
     <link href="{$templateDir}/css/application.css" rel="stylesheet">
@@ -27,21 +28,33 @@
                     <button class="bow boy bqb" type="button" data-toggle="collapse" data-target="#nav-toggleable-md">
                         <span class="adp">Toggle nav</span>
                     </button>
-                    <a class="bqc brd" href="https://bootstrap-themes.github.io/dashboard/index.html">
+                    <a class="bqc brd" href="#">
                         <span class="bv bhc bqd"></span>
                     </a>
                 </div>
 
                 <div class="collapse bpd" id="nav-toggleable-md">
-                    <form class="bqe">
-                        <input class="form-control" type="text" placeholder="Search...">
+                    <form class="bqe" method="post" action="{$siteUrl}search">
+                        <input class="form-control" name="search" type="text" placeholder="Search...">
                         <button type="submit" class="nz">
                             <span class="bv bhw"></span>
                         </button>
                     </form>
-                    <div class="nav pb nav-stacked wz">
-                        name :
-                        <input class="form-control ">
+                    <div class="nav pb nav-stacked wz contactEditOrAdd">
+                        <div class="avatar ce">
+                            <img src="https://www.gravatar.com/avatar/d06e664c1ea597ce6388ed773fa26d34/?s=100&d=mp" alt="avatar" >
+                        </div>
+                        <form action="{$siteUrl}home/edit" method="post">
+                            first name :
+                            <input type="text" value="" autocomplete="off" name="firstName" class="form-control contactFirstName">
+                            last name :
+                            <input type="text" value="" autocomplete="off" name="lastName" class="form-control contactLastName">
+                            phone :
+                            <input type="text" value="" autocomplete="off" name="phone" class="form-control contactPhone">
+                            email :
+                            <input type="email" value="" autocomplete="off" name="email" class="form-control contactEmail">
+                            <input type="submit" value="save" class="btn btn-success">
+                        </form>
                     </div>
                     <hr class="bre aez">
                 </div>
@@ -55,51 +68,36 @@
                 </div>
 
                 <div class="on bqr">
-                    <div class="axm bpy">
-                        <input type="text" value="01/01/15 - 01/08/15" class="form-control" data-provide="datepicker">
-                        <span class="bv bbc"></span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bop ayg">
-                <div class="boq bor">
-                    <div class="axm bpy">
-
-                    </div>
-                </div>
-                <div class="boq">
                     <div class="ol">
                         <button type="button" class="ce nr">
-                            <span class="bv bji"></span>
+                            <i class="fa fa-plus"></i> Add New Contact
                         </button>
                         <button type="button" class="ce nr">
-                            <span class="bv bei"></span>
+                            <i class="fa fa-trash"></i>Delete Selected Contacts
                         </button>
                     </div>
                 </div>
             </div>
 
+
             <div class="ly">
-                <table class="ck" data-sort="table">
+                <table class="ck" >
                     <thead>
                     <tr>
                         <th><input type="checkbox" class="bsn" id="selectAll"></th>
-                        <th>Order</th>
-                        <th>Customer name</th>
-                        <th>Description</th>
-                        <th>Date</th>
-                        <th>Total</th>
+                        <th>first name</th>
+                        <th>last name</th>
+                        <th>phone</th>
+                        <th>email</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td><input type="checkbox" class="bso"></td>
-                        <td><a href="#">#10001</a></td>
-                        <td>First Last</td>
-                        <td>Admin theme, marketing theme</td>
-                        <td>01/01/2015</td>
-                        <td>$200.00</td>
+                    <tr class="selectConatct">
+                        <td><input type="checkbox" value="12" name="deleted[]" class="bso"></td>
+                        <td class="contactInfo" >erfan</td>
+                        <td class="contactInfo">ebrahimi</td>
+                        <td class="contactInfo">09361090413</td>
+                        <td class="contactInfo">persionhost@gmail.com</td>
                     </tr>
 
                     </tbody>

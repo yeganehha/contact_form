@@ -10,7 +10,48 @@ $smarty->registerPlugin("function", 'showPrice', 'showPrice');
 $smarty->registerPlugin("function", 'digitToPersainLetters', 'digit_to_persain_letters');
 $smarty->registerPlugin("function", 'MoneyToLetters', 'MoneyToLetters');
 $smarty->registerPlugin("function", 'showDistance', 'showDistance');
+$smarty->registerPlugin("function", 'gravatar', 'gravatar');
 
+
+function gravatar($params,$smarty){
+	$email = $params['email'];
+	if ( isset($params['size']) )
+		$s = $params['size'];
+	else
+		$s = 80;
+	if ( isset($params['default']) )
+		$d = $params['default'];
+	else
+		$d = 'mp';
+	if ( isset($params['rating']) )
+		$r = $params['rating'];
+	else
+		$r = 'g';
+	if ( isset($params['rating']) )
+		$r = $params['rating'];
+	else
+		$r = 'g';
+	if ( isset($params['getImage']) )
+		$img = true;
+	else
+		$img = false;
+	if ( isset($params['attach']) )
+		$atts = $params['attach'];
+	else
+		$atts = array();
+
+
+	$url = 'https://www.gravatar.com/avatar/';
+	$url .= md5( strtolower( trim( $email ) ) );
+	$url .= "?s=$s&d=$d&r=$r";
+	if ( $img ) {
+		$url = '<img src="' . $url . '"';
+		foreach ( $atts as $key => $val )
+			$url .= ' ' . $key . '="' . $val . '"';
+		$url .= ' />';
+	}
+	return $url;
+}
 function showDistance($params, $smarty)
 {
 	// طبقه بندی بیشتر را به ابتدای لیست اضافه کنید
