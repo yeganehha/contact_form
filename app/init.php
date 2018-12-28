@@ -42,4 +42,5 @@ require_once INC_DIR.'core/app.php';
 require_once INC_DIR.'core/controller.php';
 $configDataBase = require_once INC_DIR.'config.php';
 require_once INC_DIR.'core/databaseConection.php';
+require_once INC_DIR.'core/request.php';
 database::conection($configDataBase);
