@@ -24,7 +24,24 @@ class home extends \controller {
 
 	public function index($params = null){
 		//parent::view('home',$params);
-		parent::view('home',array('username' => 'erfan'));
+		$model = parent::model('contact');
+		$listContact = $model->search(array() , ' 1 ' );
+		parent::view('home',array('listContent' => $listContact ));
+	}
+
+	public function search($params = null){
+		$dataGet = \request::get(array('search'));
+		$validate = new \validate($dataGet,array(
+			'search' => 'required|notEmpty'
+		));
+		$model = parent::model('contact');
+		if ( $validate->isValid() ) {
+			$validData = $validate->getReturnData() ;
+			$listContact = $model->search(array('%'.$validData['search'].'%','%'.$validData['search'].'%','%'.$validData['search'].'%','%'.$validData['search'].'%'), ' lastName LIKE ? or  firstName LIKE ? or  phone LIKE ? or  email LIKE  ? ');
+		} else {
+			$listContact = $model->search(array() , ' 1 ' );
+		}
+		parent::view('home',array('listContent' => $listContact ));
 	}
 
 	public function edit(){
@@ -38,17 +55,36 @@ class home extends \controller {
 		));
 		if ( $validate->isValid() ){
 			$validData = $validate->getReturnData() ;
-			$model = parent::model('contact');
+			if ( $validData['id'] > 0 )
+				$model = parent::model('contact' ,$validData['id']);
+			else
+				$model = parent::model('contact');
 			$model->setEmail($validData['email']);
 			$model->setLastName($validData['lastName']);
 			$model->setPhone($validData['phone']);
 			$model->setFirstName($validData['firstName']);
-			$idOfInsertToDB = $model->insertToDataBase();
-			if ( $idOfInsertToDB > 0 ) {
-				header('Location: '.HTTP_ROOT.'home/index/insertDone/'.$idOfInsertToDB);
+			if ( $model->getId() > 0 ){
+				$resultEdit = $model->upDateDataBase();
+				if ( $resultEdit ) {
+					header('Location: '.HTTP_ROOT.'home/index/editDone/'. $model->getId());
+				}
+			} else {
+				$idOfInsertToDB = $model->insertToDataBase();
+				if ($idOfInsertToDB > 0) {
+					header('Location: ' . HTTP_ROOT . 'home/index/insertDone/' . $idOfInsertToDB);
+				}
 			}
 		} else {
 			show($validate->getError());
 		}
+	}
+
+	public function delete(){
+		$dataGet = \request::post(array('deleted'));
+		foreach ( $dataGet['deleted'] as $key => $id ){
+			$model = parent::model('contact' , $id );
+			$result = $model->deleteFromDataBase();
+		}
+		header('Location: '.HTTP_ROOT.'home/index/deleteDone');
 	}
 }

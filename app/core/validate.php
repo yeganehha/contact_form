@@ -71,6 +71,7 @@ class validate {
 		return $this->isValid ;
 	}
 
+
 	/**
 	 * @return string
 	 */
@@ -136,6 +137,10 @@ class validate {
 		$num_a=array('0','1','2','3','4','5','6','7','8','9');
 		$key_a=array('۰','۱','۲','۳','۴','۵','۶','۷','۸','۹');
 		$paramsValue = str_replace($key_a,$num_a,$paramsValue);
+		if ( $paramsValue == '' ) {
+			$this->returnData[$paramsName] = $paramsValue;
+			return true;
+		}
 		$explodeAccolade = preg_split("/{|}/", $paramsValidateType);
 		$correctGroupWords = array();
 		if ( count($explodeAccolade) >  0 ) {
@@ -240,7 +245,7 @@ class validate {
 	 * @return bool
 	 */
 	private function __notEmpty($paramsName , $paramsValue , $paramsValidateType ){
-		if ( ( empty($paramsValue) and $paramsValue != '0' ) or $paramsValue == ''  ) {
+		if ( ( ( empty($paramsValue) and $paramsValue != '0' ) or $paramsValue == '' ) or $paramsValue == null  ) {
 			$this->error[] = array('name' => $paramsName , 'type' => 'notEmpty' , 'params' => '' );
 			return false ;
 		}

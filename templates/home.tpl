@@ -34,18 +34,18 @@
                 </div>
 
                 <div class="collapse bpd" id="nav-toggleable-md">
-                    <form class="bqe" method="post" action="{$siteUrl}search">
-                        <input class="form-control" name="search" type="text" placeholder="Search...">
+                    <form class="bqe" method="get" action="{$siteUrl}home/search">
+                        <input class="form-control" name="search" type="text" autofocus autocomplete="off" placeholder="Search...">
                         <button type="submit" class="nz">
                             <span class="bv bhw"></span>
                         </button>
                     </form>
                     <div class="nav pb nav-stacked wz contactEditOrAdd">
                         <div class="avatar ce">
-                            <img src="https://www.gravatar.com/avatar/d06e664c1ea597ce6388ed773fa26d34/?s=100&d=mp" alt="avatar" >
+                            <img src="https://www.gravatar.com/avatar/d06e664c1ea597ce6388ed773fa26d34/?s=100&d=mp" class="contactAvatar hidden" alt="avatar" >
                         </div>
                         <form action="{$siteUrl}home/edit" method="post">
-                            <input type="hidden" name="id" value="0">
+                            <input type="hidden" name="id" class="contactId" value="0">
                             first name :
                             <input type="text" value="" autocomplete="off" name="firstName" class="form-control contactFirstName">
                             last name :
@@ -70,10 +70,10 @@
 
                 <div class="on bqr">
                     <div class="ol">
-                        <button type="button" class="ce nr">
+                        <button type="button" class="ce nr" onclick="showContactForEdit(0,'','','','','')">
                             <i class="fa fa-plus"></i> Add New Contact
                         </button>
-                        <button type="button" class="ce nr">
+                        <button type="button" class="ce nr" onclick="$('#deleteContact').submit();">
                             <i class="fa fa-trash"></i>Delete Selected Contacts
                         </button>
                     </div>
@@ -82,10 +82,11 @@
 
 
             <div class="ly">
+                <form action="{$siteUrl}home/delete" method="post" id="deleteContact">
                 <table class="ck" >
                     <thead>
                     <tr>
-                        <th><input type="checkbox" class="bsn" id="selectAll"></th>
+                        <th><input type="checkbox" class="bsn" onclick="$('.bso').prop('checked', $(this).prop('checked'));" id="selectAll"></th>
                         <th>first name</th>
                         <th>last name</th>
                         <th>phone</th>
@@ -93,19 +94,26 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="selectConatct">
-                        <td><input type="checkbox" value="12" name="deleted[]" class="bso"></td>
-                        <td class="contactInfo" >erfan</td>
-                        <td class="contactInfo">ebrahimi</td>
-                        <td class="contactInfo">09361090413</td>
-                        <td class="contactInfo">persionhost@gmail.com</td>
-                    </tr>
+                    {foreach from=$listContent key=key item=item }
+                        <tr class="selectConatct" onclick="showContactForEdit({$item.id},'{$item.firstName}','{$item.lastName}','{$item.phone}','{$item.email}' , '{$item.email|md5}')">
+                            <td><input type="checkbox" value="{$item.id}" name="deleted[]" class="bso"></td>
+                            <td class="contactInfo" >{$item.firstName}</td>
+                            <td class="contactInfo">{$item.lastName}</td>
+                            <td class="contactInfo">{$item.phone}</td>
+                            <td class="contactInfo">{$item.email}</td>
+                        </tr>
+                        {foreachelse}
+                        <tr>
+                            <td class="contactInfo"  colspan="5" style="text-align: center;" >no record find</td>
+                        </tr>
+                    {/foreach}
 
                     </tbody>
                 </table>
+                </form>
             </div>
 
-            <div class="avv">
+            <!--<div class="avv">
                 <nav>
                     <ul class="qn">
                         <li class="qp">
@@ -127,7 +135,7 @@
                         </li>
                     </ul>
                 </nav>
-            </div>
+            </div>-->
 
         </div>
     </div>
@@ -144,6 +152,18 @@
 <script>
     // execute/clear BS loaders for docs
     $(function(){ while(window.BS&&window.BS.loader&&window.BS.loader.length){ (window.BS.loader.pop())()}})
+
+    function showContactForEdit(id,firstname,lastname,phone,email,emailMd5) {
+        $(".contactId").val(id);
+        $(".contactFirstName").val(firstname);
+        $(".contactLastName").val(lastname);
+        $(".contactPhone").val(phone);
+        $(".contactEmail").val(email);
+        if ( email !== '' )
+            $(".contactAvatar").attr("src",'https://www.gravatar.com/avatar/'+emailMd5+'/?s=100&d=mp').removeClass('hidden');
+        else
+            $(".contactAvatar").addClass('hidden');
+    }
 </script>
 </body>
 
