@@ -80,17 +80,11 @@ class home extends \controller {
 	}
 
 	public function delete(){
-		$dataGet = \request::get(array('delete'));
-		$validate = new \validate($dataGet,array(
-			'delete.*' => 'required|notEmpty'
-		));
-		$model = parent::model('contact');
-		if ( $validate->isValid() ) {
-			$validData = $validate->getReturnData() ;
-			$listContact = $model->search(array('%'.$validData['search'].'%','%'.$validData['search'].'%','%'.$validData['search'].'%','%'.$validData['search'].'%'), ' lastName LIKE ? or  firstName LIKE ? or  phone LIKE ? or  email LIKE  ? ');
-		} else {
-			$listContact = $model->search(array() , ' 1 ' );
+		$dataGet = \request::post(array('deleted'));
+		foreach ( $dataGet['deleted'] as $key => $id ){
+			$model = parent::model('contact' , $id );
+			$result = $model->deleteFromDataBase();
 		}
-		parent::view('home',array('listContent' => $listContact ));
+		header('Location: '.HTTP_ROOT.'home/index/deleteDone');
 	}
 }
