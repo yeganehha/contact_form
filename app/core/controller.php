@@ -43,6 +43,14 @@ class controller {
 		}
 	}
 
+
+	/**
+	 * @param        $model
+	 * @param null   $searchVariable
+	 * @param string $searchWhereClaus
+	 *
+	 * @return \App\model\contact
+	 */
 	protected function model($model , $searchVariable = null , $searchWhereClaus = 'id = ? ') {
 		if (file_exists(INC_DIR . 'model/' . $model . 'Model.php')) {
 			$model = 'App\model\\'.$model ;

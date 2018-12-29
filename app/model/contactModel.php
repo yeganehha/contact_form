@@ -47,7 +47,7 @@ class contact implements  model {
 
 	public function search( $searchVariable, $searchWhereClaus , $tableName = 'contact'  , $fields = '*' ) {
 		$results = \database::searche($tableName, $searchWhereClaus, $searchVariable, true ,false,$fields );
-		return $this->returning($results) ;
+		return $results ;
 	}
 
 
