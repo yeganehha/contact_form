@@ -86,7 +86,7 @@
                 <table class="ck" >
                     <thead>
                     <tr>
-                        <th><input type="checkbox" class="bsn" id="selectAll"></th>
+                        <th><input type="checkbox" class="bsn" onclick="$('.bso').prop('checked', $(this).prop('checked'));" id="selectAll"></th>
                         <th>first name</th>
                         <th>last name</th>
                         <th>phone</th>
@@ -113,7 +113,7 @@
                 </form>
             </div>
 
-            <div class="avv">
+            <!--<div class="avv">
                 <nav>
                     <ul class="qn">
                         <li class="qp">
@@ -135,7 +135,7 @@
                         </li>
                     </ul>
                 </nav>
-            </div>
+            </div>-->
 
         </div>
     </div>
