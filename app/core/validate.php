@@ -37,7 +37,32 @@ class validate {
 		try {
 			$this->data = $data;
 			$this->error = null ;
-			$this->doPerEachVariable($data,$validations);
+			foreach ($validations as $paramsName => $validationsParameters) {
+				$validationsParametersEachOne = null ;
+				if ( !isset($data[$paramsName]))
+					break ;
+
+				if ( strpos( $validationsParameters , '|' ) ){
+					$validationsParametersEachOne = explode('|',$validationsParameters);
+				}
+				else {
+					$validationsParametersEachOne[] = $validationsParameters ;
+				}
+				foreach ( $validationsParametersEachOne as $validateType ){
+					$validateTypeParameter = null ;
+					$strpose = strpos($validateType,':');
+					if ( $strpose !== false){
+						$validateTypeParameter = substr($validateType , $strpose+1 );
+						$validateType = substr($validateType,0,$strpose);
+					}
+					$validateType = $this->methodExploder.$validateType ;
+					if( method_exists($this,$validateType)){
+						if ( ! $this->{$validateType}($paramsName , $data[$paramsName] ,$validateTypeParameter ) )
+							$this->isValid = false ;
+					} else
+						$this->isValid = false ;
+				}
+			}
 		} catch ( \Exception $e) {
 			$this->error = $e->getMessage() ;
 			$this->isValid = false ;
@@ -46,52 +71,6 @@ class validate {
 		return $this->isValid ;
 	}
 
-	private function doPerEachVariable ($data , $validations){
-		foreach ($validations as $paramsName => $validationsParameters) {
-			$validationsParametersEachOne = null ;
-			/*if ( !isset($data[$paramsName]))
-				break ;*/
-			if ( strpos($paramsName,'.' ) !== false ){
-				$paramsNameForArray = explode('.', $paramsName);
-				$tempData = $data ;
-				$count = count($paramsNameForArray) ;
-				for($i = 0 ; $i < $count ; $i++ ){
-					if ( $paramsNameForArray[$i] == '*' ){
-						$newTempParamsName = implode('.' , $paramsNameForArray) ;
-						foreach ($tempData as $tempDataKey => $tempDataValue )
-							$this->doPerEachVariable($tempDataValue , array($newTempParamsName=>$validationsParameters) );
-					}
-					$tempData = $tempData[ $paramsNameForArray[$i] ];
-					unset($paramsNameForArray[$i]);
-				}
-				$this->doPerEachOne($validationsParameters,$paramsName,$tempData);
-			} else {
-				$this->doPerEachOne($validationsParameters,$paramsName,$data[$paramsName]);
-			}
-		}
-	}
-	private function doPerEachOne($validationsParameters,$paramsName,$data){
-		if ( strpos( $validationsParameters , '|' ) ){
-			$validationsParametersEachOne = explode('|',$validationsParameters);
-		}
-		else {
-			$validationsParametersEachOne[] = $validationsParameters ;
-		}
-		foreach ( $validationsParametersEachOne as $validateType ){
-			$validateTypeParameter = null ;
-			$strpose = strpos($validateType,':');
-			if ( $strpose !== false){
-				$validateTypeParameter = substr($validateType , $strpose+1 );
-				$validateType = substr($validateType,0,$strpose);
-			}
-			$validateType = $this->methodExploder.$validateType ;
-			if( method_exists($this,$validateType)){
-				if ( ! $this->{$validateType}($paramsName , $data ,$validateTypeParameter ) )
-					$this->isValid = false ;
-			} else
-				$this->isValid = false ;
-		}
-	}
 
 	/**
 	 * @return string
